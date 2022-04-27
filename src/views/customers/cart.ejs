@@ -1,0 +1,70 @@
+<section class="empty-cart">
+  <% if (session.cart) { %>
+    <div class="orders container mx-auto w-full p-4 md:p-12 md:w-1/2">
+      <div class="flex items-center border-b border-gray-300 pb-4">
+        <div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+            <path
+              d="M10 19.5c0 .829-.672 1.5-1.5 1.5s-1.5-.671-1.5-1.5c0-.828.672-1.5 1.5-1.5s1.5.672 1.5 1.5zm3.5-1.5c-.828 0-1.5.671-1.5 1.5s.672 1.5 1.5 1.5 1.5-.671 1.5-1.5c0-.828-.672-1.5-1.5-1.5zm1.336-5l1.977-7h-16.813l2.938 7h11.898zm4.969-10l-3.432 12h-12.597l.839 2h13.239l3.474-12h1.929l.743-2h-4.195z" />
+          </svg>
+        </div>
+        <h1 class="text-2xl font-bold ml-6">Order Summary</h1>
+      </div>
+      <div class="food-list">
+        <% Object.keys(session.cart.items).forEach((cartItem)=> { %>
+          <div class="food-item flex items-center border-b border-gray-300 py-4 text-sm">
+            <div class="flex-1 flex items-center justify-center space-x-2">
+              <img class="w-20 h-20 md:w-24 md:h-24 rounded-md shadow-md"
+                src="<%= session.cart.items[cartItem].item.image_link %>" alt="food name">
+              <div class="flex flex-col items-center justify-center space-y-3">
+                <h3>
+                  <%= session.cart.items[cartItem].item.name %>
+                </h3>
+                <span
+                  class="<%= session.cart.items[cartItem].item.veg ? 'bg-green-200' : 'bg-red-300' %> rounded-md text-xs md:text-sm py-1 px-2">
+                  <%= session.cart.items[cartItem].item.veg ? "veg" : "non-veg" %>
+                </span>
+              </div>
+            </div>
+            <div class="flex-1 flex justify-center items-center">
+              <h1>
+                <%= session.cart.items[cartItem].qty %>Pc
+              </h1>
+            </div>
+            <div class="flex justify-center items-center">
+              <h1>₹<%= (session.cart.items[cartItem].item.price * session.cart.items[cartItem].qty) / 100 %>
+              </h1>
+            </div>
+          </div>
+          <% }) %>
+      </div>
+      <div class="w-full text-right mt-6">
+        <span class="font-bold text-lg text-gray-600 mr-8">Total Amount:</span>
+        <span class="font-bold text-2xl total-price-tag">₹<%= session.cart.totalPrice / 100 %></span>
+      </div>
+      <div class="text-right mt-6">
+        <% if (user) { %>
+          <form action="/orders" method="post">
+            <input name="address" class="border border-gray-400 p-2 w-1/2" type="text" placeholder="Address">
+            <br>
+            <button class="px-6 py-2 text-white rounded-full font-bold mt-4 btn-primary">Order Now</button>
+          </form>
+          <% } else { %>
+            <a href="/login"><button class="px-6 py-2 text-white rounded-full font-bold mt-4 btn-primary">Login to
+                Continue</button></a>
+            <% } %>
+      </div>
+    </div>
+    <% } else { %>
+      <div class="container mx-auto text-center mt-8 p-12">
+        <h1 class="text-3xl font-bold mb-2">Empty Cart :)</h1>
+        <p class="text-gray-500 text-lg">You probably haven't ordered a meal yet. <br>Go to the menu to order one now!
+        </p>
+        <div class="cotainer flex justify-center items-center mt-6 mb-3">
+          <img width="200px"
+            src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgZmlsbC1ydWxlPSJldmVub2RkIiBjbGlwLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0xMi0uMDA2YzYuNjIzIDAgMTIgNS4zNzcgMTIgMTJzLTUuMzc3IDEyLTEyIDEyLTEyLTUuMzc3LTEyLTEyIDUuMzc3LTEyIDEyLTEyem01Ljk5OSAxOS45OTljMi40MjktMS44MjUgNC4wMDEtNC43MyA0LjAwMS03Ljk5OSAwLTUuNTE5LTQuNDgxLTEwLTEwLTEwcy0xMCA0LjQ4MS0xMCAxMGMwIDMuNzAxIDIuMDE1IDYuOTM2IDUuMDA4IDguNjY1di00LjAyM2MwLS41NzYtLjM2LS43NjUtMS4xNDctMS4zOTUtLjU4MS0uNDY2LS45ODEtMS4xOTQtLjkwNy0xLjkzNS4yMDktMi4xMTQuNzE4LTYuMzEyLjcxOC02LjMxMmguNXY1aC44MzZsLjE4Ni01aC41MDZsLjE0NCA1aC44MzZsLjIwMS01aC40NjlsLjE2NiA1aC44MzV2LTVoLjQ1OHMuNTYyIDQuMTcxLjc5MyA2LjI5MmMuMDgxLjc1MS0uMzQxIDEuNDkzLS45MzUgMS45NjMtLjc5MS42MjYtMS4xNTEuODA2LTEuMTUxIDEuMzkxdjUuMDQyYy43OTQuMjA0IDEuNjI2LjMxMiAyLjQ4NC4zMTIgMS4yMjkgMCAyLjQwNy0uMjIyIDMuNDk2LS42Mjl2LTMuMzcxcy0uOTc3LS4wMDMtMi4wNTYgMGMuNjY4LTUuODMgMi41ODYtMTEgMy44ODMtMTEgLjM3MyAwIC42Ny4yOTcuNjczLjcwOS4wMDUuODAyLjAwNCA3LjA5MS4wMDMgMTIuMjl6Ii8+PC9zdmc+">
+        </div>
+        <a href="/"><button class="px-6 py-2 text-white rounded-full font-bold mt-4 btn-primary">Go Back</button></a>
+      </div>
+      <% } %>
+</section>
